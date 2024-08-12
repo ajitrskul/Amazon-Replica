@@ -656,5 +656,36 @@ const products = [
       "apparel",
       "mens"
     ]
+  },
+  {
+    "id": "xg3692f4-6369-512k-z0ag-93xcg928p186",
+    "image": "images/products/backpack.jpg",
+    "name": "Black Zipper Backpack",
+    "rating": {
+      "stars": 4,
+      "count": 256
+    },
+    "priceCents": 2500,
+    "keywords": [
+      "bag",
+      "school",
+      "kids"
+    ]
+  },
+  {
+    "id": "zy82945n8-6098-372w-u4lp-87kdo953g864",
+    "image": "images/products/umbrella.jpg",
+    "name": "Dark Green Large Umbrella",
+    "rating": {
+      "stars": 3.5,
+      "count": 65
+    },
+    "priceCents": 1250,
+    "keywords": [
+      "umbrella",
+      "green",
+      "rain",
+      "parasol"
+    ]
   }
 ];
