@@ -675,7 +675,7 @@ const products = [
   {
     "id": "zy82945n8-6098-372w-u4lp-87kdo953g864",
     "image": "images/products/umbrella.jpg",
-    "name": "Dark Green Large Umbrella",
+    "name": "Large Dark Green Umbrella",
     "rating": {
       "stars": 3.5,
       "count": 65
