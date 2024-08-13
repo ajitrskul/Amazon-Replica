@@ -4,6 +4,7 @@ import {formatCurrency} from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //default export vs named export (wihout curly bracket vs with curly bracket) (to import from internet is called an ESM (EcmaScript Module) import)
 import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOptions.js';
 import {renderPaymentSummary} from './paymentSummary.js';
+import {renderCheckoutHeader} from './checkoutHeader.js';
 
 export function renderOrderSummary() {
   let cartSummaryHTML = '';
@@ -114,14 +115,14 @@ export function renderOrderSummary() {
   
   document.querySelector('.js-order-summary')
     .innerHTML = cartSummaryHTML;
-  updateCheckOutQuantity();
+  renderCheckoutHeader();
   
-  function updateCheckOutQuantity() {
+  /*function updateCheckOutQuantity() {
     const checkOutQuantity = calculateCartQuantity(); //gets current cart quantity
   
     document.querySelector('.js-checkout-quantity') //updates checkout header
       .innerHTML = `${checkOutQuantity} items`;
-  }
+  }*/ //function replaced with renderCheckoutHeader
   
   document.querySelectorAll('.js-delete-link')
     .forEach((link) => {
@@ -129,9 +130,10 @@ export function renderOrderSummary() {
         const productId = link.dataset.productId; //gets productid from delete button data
         removeFromCart(productId); //removes item from cart array
         
-        const container = document.querySelector(`.js-cart-item-container-${productId}`); //gets html element we want to delete
-        container.remove(); //deletes item from html
-        updateCheckOutQuantity();
+        //const container = document.querySelector(`.js-cart-item-container-${productId}`); //gets html element we want to delete
+        //container.remove(); //deletes item from html
+        renderOrderSummary(); //replace above with regenerating entire webpage
+        renderCheckoutHeader();
         renderPaymentSummary();
       });
     });
@@ -154,7 +156,7 @@ export function renderOrderSummary() {
     const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
     if (newQuantity > 0 && newQuantity < 1000) {
       updateQuantity(productId, newQuantity);
-      updateCheckOutQuantity();
+      renderCheckoutHeader();
       renderPaymentSummary();
       document.querySelector(`.js-quantity-label-${productId}`)
         .innerHTML = newQuantity; 
@@ -167,8 +169,9 @@ export function renderOrderSummary() {
         document.querySelector('.js-update-cart-yes-button')
           .addEventListener('click', () => {
             removeFromCart(productId);
-            document.querySelector(`.js-cart-item-container-${productId}`).remove();
-            updateCheckOutQuantity();
+            //document.querySelector(`.js-cart-item-container-${productId}`).remove();
+            renderOrderSummary(); //replace above by re-rendering entire webpage
+            renderCheckoutHeader();
             renderPaymentSummary();
           });
         document.querySelector('.js-update-cart-no-button')
