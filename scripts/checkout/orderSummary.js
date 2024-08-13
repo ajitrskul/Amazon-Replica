@@ -51,7 +51,7 @@ export function renderOrderSummary() {
             data-product-id="${matchingProduct.id}">
               Update
             </span>
-            <input class="quantity-input js-quantity-input-${matchingProduct.id}">
+            <input class="quantity-input js-quantity-input-${matchingProduct.id} js-quantity-input" data-product-id="${matchingProduct.id}">
             <span class="save-quantity-link link-primary js-save-link"
             data-product-id="${matchingProduct.id}">Save</span>
             <span class="delete-quantity-link link-primary js-delete-link" data-product-id="${matchingProduct.id}">
@@ -146,48 +146,62 @@ export function renderOrderSummary() {
       });
     });
   
+  function saveCheckOutUpdate(saveElement) {
+    const productId = saveElement.dataset.productId;
+
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+
+    const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
+    if (newQuantity > 0 && newQuantity < 1000) {
+      updateQuantity(productId, newQuantity);
+      updateCheckOutQuantity();
+      renderPaymentSummary();
+      document.querySelector(`.js-quantity-label-${productId}`)
+        .innerHTML = newQuantity; 
+      container.classList.remove('is-editing-quantity');
+    }
+    else {
+      const quantityWarning = document.querySelector(`.js-quantity-warning-${productId}`);
+      if (newQuantity === 0) {
+        quantityWarning.innerHTML = 'Are you sure you would like to delete this item? <button class="update-cart-confirm-button js-update-cart-yes-button">Yes</button><button class="update-cart-confirm-button js-update-cart-no-button">No</button>';
+        document.querySelector('.js-update-cart-yes-button')
+          .addEventListener('click', () => {
+            removeFromCart(productId);
+            document.querySelector(`.js-cart-item-container-${productId}`).remove();
+            updateCheckOutQuantity();
+            renderPaymentSummary();
+          });
+        document.querySelector('.js-update-cart-no-button')
+          .addEventListener('click', () => {
+            quantityWarning.innerHTML = '';
+          });
+      }
+      else {
+        quantityWarning.innerHTML = 'Invalid Quantity';
+        setTimeout(() => {
+          quantityWarning.innerHTML = '';
+        },2000);  
+      }  
+    }
+    document.querySelector(`.js-quantity-input-${productId}`).value = '';
+  }
+
   document.querySelectorAll('.js-save-link')
     .forEach((link) => {
       link.addEventListener('click', () => {
-        const productId = link.dataset.productId;
-  
-        const container = document.querySelector(`.js-cart-item-container-${productId}`);
-  
-        const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
-        if (newQuantity > 0 && newQuantity < 1000) {
-          updateQuantity(productId, newQuantity);
-          updateCheckOutQuantity();
-          renderPaymentSummary();
-          document.querySelector(`.js-quantity-label-${productId}`)
-            .innerHTML = newQuantity; 
-          container.classList.remove('is-editing-quantity');
-        }
-        else {
-          const quantityWarning = document.querySelector(`.js-quantity-warning-${productId}`);
-          if (newQuantity === 0) {
-            quantityWarning.innerHTML = 'Are you sure you would like to delete this item? <button class="update-cart-confirm-button js-update-cart-yes-button">Yes</button><button class="update-cart-confirm-button js-update-cart-no-button">No</button>';
-            document.querySelector('.js-update-cart-yes-button')
-              .addEventListener('click', () => {
-                removeFromCart(productId);
-                document.querySelector(`.js-cart-item-container-${productId}`).remove();
-                updateCheckOutQuantity();
-                renderPaymentSummary();
-              });
-            document.querySelector('.js-update-cart-no-button')
-              .addEventListener('click', () => {
-                quantityWarning.innerHTML = '';
-              });
-          }
-          else {
-            quantityWarning.innerHTML = 'Invalid Quantity';
-            setTimeout(() => {
-              quantityWarning.innerHTML = '';
-            },2000);  
-          }  
-        }
-        document.querySelector(`.js-quantity-input-${productId}`).value = '';
+        saveCheckOutUpdate(link);
       })
     });
+
+    document.querySelectorAll('.js-quantity-input')
+      .forEach((quantityInput) => {
+        quantityInput.addEventListener('keydown', (key) => {
+          console.log(key);
+          if (key.key === 'Enter') {
+            saveCheckOutUpdate(quantityInput);
+          }
+        });
+      });
   
   document.querySelectorAll('.js-delivery-option')
     .forEach((element) => {
