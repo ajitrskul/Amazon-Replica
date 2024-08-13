@@ -209,3 +209,38 @@
   margin-top: 11px;
   margin-bottom: 15px;
 }
+
+.is-editing-quantity .quantity-input {
+  display:initial;
+}
+
+.is-editing-quantity .save-quantity-link {
+  display:initial;
+}
+
+.quantity-input {
+  width:30px;
+  display:none;
+}
+
+.save-quantity-link {
+  display:none;
+}
+
+.quantity-warning {
+  padding-left:85px;
+  color:red;
+}
+
+.update-cart-confirm-button {
+  margin-top:10px;
+  margin-right:5px;
+  border:none;
+  border-radius:5px;
+  padding:5px 8px;
+  cursor:pointer;
+}
+
+.update-cart-confirm-button:hover {
+  background-color:rgb(200,200,200);
+}
