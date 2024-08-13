@@ -1,4 +1,4 @@
-import {cart, removeFromCart, calculateCartQuantity, updateQuantity} from '../data/cart.js';
+import {cart, removeFromCart, calculateCartQuantity, updateQuantity, updateDeliveryOption} from '../data/cart.js';
 import {products} from '../data/products.js';
 import {formatCurrency} from './utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //default export vs named export (wihout curly bracket vs with curly bracket) (to import from internet is called an ESM (EcmaScript Module) import)
@@ -99,7 +99,9 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
     const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
     html += `
-    <div class="delivery-option">
+    <div class="delivery-option js-delivery-option" 
+    data-product-id="${matchingProduct.id}"
+    data-delivery-option-id="${deliveryOption.id}}">
       <input type="radio" 
         ${isChecked ? 'checked' : ''}
         class="delivery-option-input"
@@ -141,53 +143,61 @@ document.querySelectorAll('.js-delete-link')
     });
   });
 
-  document.querySelectorAll('.js-update-link')
-    .forEach((link) => {
-      link.addEventListener('click', () => {
-        const productId = link.dataset.productId; //gets product id from update button data
-        
-        const container = document.querySelector(`.js-cart-item-container-${productId}`);
-        container.classList.add('is-editing-quantity');
-      });
+document.querySelectorAll('.js-update-link')
+  .forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId; //gets product id from update button data
+      
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      container.classList.add('is-editing-quantity');
     });
+  });
 
-    document.querySelectorAll('.js-save-link')
-      .forEach((link) => {
-        link.addEventListener('click', () => {
-          const productId = link.dataset.productId;
+document.querySelectorAll('.js-save-link')
+  .forEach((link) => {
+    link.addEventListener('click', () => {
+      const productId = link.dataset.productId;
 
-          const container = document.querySelector(`.js-cart-item-container-${productId}`);
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
 
-          const newQuantity = Number(document.querySelector('.js-quantity-input').value);
-          if (newQuantity > 0 && newQuantity < 1000) {
-            updateQuantity(productId, newQuantity);
-            updateCheckOutQuantity();
-            document.querySelector(`.js-quantity-label-${productId}`)
-              .innerHTML = newQuantity; 
-            container.classList.remove('is-editing-quantity');
-          }
-          else {
-            const quantityWarning = document.querySelector(`.js-quantity-warning-${productId}`);
-            if (newQuantity === 0) {
-              quantityWarning.innerHTML = 'Are you sure you would like to delete this item? <button class="update-cart-confirm-button js-update-cart-yes-button">Yes</button><button class="update-cart-confirm-button js-update-cart-no-button">No</button>';
-              document.querySelector('.js-update-cart-yes-button')
-                .addEventListener('click', () => {
-                  removeFromCart(productId);
-                  document.querySelector(`.js-cart-item-container-${productId}`).remove();
-                  updateCheckOutQuantity();
-                });
-              document.querySelector('.js-update-cart-no-button')
-                .addEventListener('click', () => {
-                  quantityWarning.innerHTML = '';
-                });
-            }
-            else {
-              quantityWarning.innerHTML = 'Invalid Quantity';
-              setTimeout(() => {
-                quantityWarning.innerHTML = '';
-              },2000);  
-            }  
-          }
-          document.querySelector('.js-quantity-input').value = '';
-        })
-      });
+      const newQuantity = Number(document.querySelector('.js-quantity-input').value);
+      if (newQuantity > 0 && newQuantity < 1000) {
+        updateQuantity(productId, newQuantity);
+        updateCheckOutQuantity();
+        document.querySelector(`.js-quantity-label-${productId}`)
+          .innerHTML = newQuantity; 
+        container.classList.remove('is-editing-quantity');
+      }
+      else {
+        const quantityWarning = document.querySelector(`.js-quantity-warning-${productId}`);
+        if (newQuantity === 0) {
+          quantityWarning.innerHTML = 'Are you sure you would like to delete this item? <button class="update-cart-confirm-button js-update-cart-yes-button">Yes</button><button class="update-cart-confirm-button js-update-cart-no-button">No</button>';
+          document.querySelector('.js-update-cart-yes-button')
+            .addEventListener('click', () => {
+              removeFromCart(productId);
+              document.querySelector(`.js-cart-item-container-${productId}`).remove();
+              updateCheckOutQuantity();
+            });
+          document.querySelector('.js-update-cart-no-button')
+            .addEventListener('click', () => {
+              quantityWarning.innerHTML = '';
+            });
+        }
+        else {
+          quantityWarning.innerHTML = 'Invalid Quantity';
+          setTimeout(() => {
+            quantityWarning.innerHTML = '';
+          },2000);  
+        }  
+      }
+      document.querySelector('.js-quantity-input').value = '';
+    })
+  });
+
+document.querySelectorAll('.js-delivery-option')
+  .forEach((element) => {
+    element.addEventListener('click', () => {
+      const {productId, deliveryOptionId} = element.dataset;
+      updateDeliveryOption(productId, deliveryOptionId);
+    })
+});
