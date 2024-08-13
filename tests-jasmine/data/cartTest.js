@@ -1,7 +1,7 @@
 import {addToCart, cart, loadFromStorage} from '../../data/cart.js';
 
-describe('testsuite: addToCart', () => {
-  it('adds an existing product to the cart', () => {
+describe('testsuite: addToCart', () => { 
+  it('adds an existing product to the cart', () => { //unit test (one function)
     spyOn(localStorage, 'setItem');
 
     spyOn(localStorage, 'getItem').and.callFake(() => {
