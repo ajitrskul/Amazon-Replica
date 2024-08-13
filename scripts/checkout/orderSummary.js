@@ -3,6 +3,7 @@ import {products, getProduct} from '../../data/products.js';
 import {formatCurrency} from '../utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js'; //default export vs named export (wihout curly bracket vs with curly bracket) (to import from internet is called an ESM (EcmaScript Module) import)
 import {deliveryOptions, getDeliveryOption} from '../../data/deliveryOptions.js';
+import {renderPaymentSummary} from './paymentSummary.js';
 
 export function renderOrderSummary() {
   let cartSummaryHTML = '';
@@ -131,6 +132,7 @@ export function renderOrderSummary() {
         const container = document.querySelector(`.js-cart-item-container-${productId}`); //gets html element we want to delete
         container.remove(); //deletes item from html
         updateCheckOutQuantity();
+        renderPaymentSummary();
       });
     });
   
@@ -155,6 +157,7 @@ export function renderOrderSummary() {
         if (newQuantity > 0 && newQuantity < 1000) {
           updateQuantity(productId, newQuantity);
           updateCheckOutQuantity();
+          renderPaymentSummary();
           document.querySelector(`.js-quantity-label-${productId}`)
             .innerHTML = newQuantity; 
           container.classList.remove('is-editing-quantity');
@@ -168,6 +171,7 @@ export function renderOrderSummary() {
                 removeFromCart(productId);
                 document.querySelector(`.js-cart-item-container-${productId}`).remove();
                 updateCheckOutQuantity();
+                renderPaymentSummary();
               });
             document.querySelector('.js-update-cart-no-button')
               .addEventListener('click', () => {
@@ -190,11 +194,11 @@ export function renderOrderSummary() {
       element.addEventListener('click', () => {
         const {productId, deliveryOptionId} = element.dataset;
         updateDeliveryOption(productId, deliveryOptionId);
-        console.log(cart);
         renderOrderSummary();
+        renderPaymentSummary();
       })
   });
 }
 
-//MVC -> Model-View-Controller technique
+//MVC -> Model-View-Controller -> technique for creating interactive websites
 
