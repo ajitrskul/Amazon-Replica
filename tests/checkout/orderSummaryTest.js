@@ -1,5 +1,6 @@
 import {renderOrderSummary} from '../../scripts/checkout/orderSummary.js';
 import {loadFromStorage, cart} from '../../data/cart.js';
+import {loadProducts} from '../../data/products.js';
 
 
 describe('test suite: renderOrderSummary', () => {
@@ -13,6 +14,11 @@ describe('test suite: renderOrderSummary', () => {
     beforeAll() = runs code before all tests
     afterAll() = runs code after all tests
   */
+  beforeAll((done) => {
+    loadProducts(() => {
+      done();
+    });
+  });
 
   beforeEach(() => {
     spyOn(localStorage, 'setItem');
