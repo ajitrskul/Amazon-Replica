@@ -1,17 +1,5 @@
 import {formatCurrency} from '../scripts/utils/money.js';
 
-export function getProduct(productId) {
-  let matchingProduct;
-
-  products.forEach((product) => {
-    if (product.id === productId) { //find current cartItem in product array
-      matchingProduct = product;
-    }
-  });
-
-  return matchingProduct;
-}
-
 class Product {
   id;
   image;
@@ -29,7 +17,7 @@ class Product {
   }
 
   getStarsUrl() {
-    return `images/ratings/rating-${this.rating.stars * 10}.png`
+    return `images/ratings/rating-${this.rating.stars * 10}.png`;
   }
 
   getPrice() {
@@ -64,6 +52,40 @@ Notes:
  - inside a function this = undefined but we can use .call to change the value of this (.call(value of this, parameters of function))
  - this keyWord is not affected by arrow functions (so u can still have access to outside objects in arrow functions)
 */
+
+export let products = [];
+
+export function loadProducts(funct) {
+  const xhr = new XMLHttpRequest();
+
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response);
+
+    products = products.map((productDetails) => { 
+      if (productDetails.type === 'clothing') {
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);
+    });
+    funct();    
+  });
+
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.send();
+}
+
+export function getProduct(productId) {
+  let matchingProduct;
+  products.forEach((product) => {
+    if (product.id === productId) { //find current cartItem in product array
+      matchingProduct = product;
+    }
+  });
+
+  return matchingProduct;
+}
+
+/*
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
@@ -760,3 +782,4 @@ export const products = [
   }
   return new Product(productDetails);
 });
+*/

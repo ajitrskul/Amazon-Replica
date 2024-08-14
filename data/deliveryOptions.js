@@ -32,7 +32,6 @@ export function calculateDeliveryDate(deliveryOption) {
   let daysToAdd = deliveryOption.deliveryDays;
   while (daysToAdd > 0) {
     deliveryDate = deliveryDate.add(1, 'days');
-    console.log(deliveryDate);
     if ((deliveryDate.day() !== 0) && (deliveryDate.day() !== 6)) {
       daysToAdd--;
     }
