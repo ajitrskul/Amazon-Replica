@@ -56,7 +56,14 @@ class Clothing extends Product { //class inheritance in JS
     `;
   }
 }
-
+/*
+Notes:
+ - inside a method this points to the outer object
+ - if you use this to refer to an object property on initialization that property is undefined
+  (ex object1 = {a:1, b:this.a}) won't work)
+ - inside a function this = undefined but we can use .call to change the value of this (.call(value of this, parameters of function))
+ - this keyWord is not affected by arrow functions (so u can still have access to outside objects in arrow functions)
+*/
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
