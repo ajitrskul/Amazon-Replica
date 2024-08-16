@@ -9,10 +9,10 @@ xhr.open('GET', 'https://supersimplebackend.dev'); //parameters: (type of http r
 Notes
 
 Types of HTTP (Hypertext Transfer Protocol) Requests:
-- GET
-- POST
-- PUT
-- DELETE
+- GET = get something from the backend
+- POST = create something
+- PUT = update something
+- DELETE = delete something
 
 URL = Uniform Resource Locator
 - Address for the internet
