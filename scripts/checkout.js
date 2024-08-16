@@ -4,6 +4,25 @@ import {renderPaymentSummary} from './checkout/paymentSummary.js';
 import {loadProducts, loadProductsFetch} from '../data/products.js';
 import {loadCart} from '../data/cart.js';
 
+//async await allows us to write async code like normal code
+async function loadPage() { //async makes a function return a promise
+  console.log('load page');
+
+  await loadProductsFetch(); //can only use await inside an async function (closest function must be async)
+
+  await new Promise((resolve) => {
+    loadCart(() => {
+      resolve();
+    });
+  });
+
+  renderCheckoutHeader();
+  renderOrderSummary();
+  renderPaymentSummary();
+}
+loadPage();
+
+/*
 Promise.all([
   loadProductsFetch(),
   new Promise((resolve) => {
@@ -16,6 +35,7 @@ Promise.all([
   renderOrderSummary();
   renderPaymentSummary();
 })
+*.
 
 /*
 //reccomended to use promises instead of callbacks

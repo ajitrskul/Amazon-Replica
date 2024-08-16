@@ -89,7 +89,7 @@ export function updateDeliveryOption(productId, deliveryOptionId) {
   saveToStorage();
 }
 
-export function loadCart(funct) {
+export function loadCart(funct) { //does nothing (used to practice callbacks from backend)
   const xhr = new XMLHttpRequest();
 
   xhr.addEventListener('load', () => {
