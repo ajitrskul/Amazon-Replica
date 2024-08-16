@@ -7,14 +7,20 @@ import {loadCart} from '../data/cart.js';
 //async await allows us to write async code like normal code
 async function loadPage() { //async makes a function return a promise
   console.log('load page');
-
-  await loadProductsFetch(); //can only use await inside an async function (closest function must be async)
-
-  await new Promise((resolve) => {
-    loadCart(() => {
-      resolve();
+  try { //how to handle errors in async await
+    //throw 'error1'; <-- how to manually create an error to go to catch
+    await loadProductsFetch(); //can only use await inside an async function (closest function must be async)
+    await new Promise((resolve, reject) => { //reject() is a function that lets us throw an error in the future
+      //throw 'error2'; <-- manually create an error in a promise
+      loadCart(() => {
+        //reject('error3'); <== manually create error in the future
+        resolve();
+      });
     });
-  });
+  }
+  catch (error) { //error contains info about error
+    console.log('Unexpected error. Please try again later.');
+  }
 
   renderCheckoutHeader();
   renderOrderSummary();
