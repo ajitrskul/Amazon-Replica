@@ -1,8 +1,23 @@
 import {renderCheckoutHeader} from './checkout/checkoutHeader.js';
 import {renderOrderSummary} from './checkout/orderSummary.js';
 import {renderPaymentSummary} from './checkout/paymentSummary.js';
-import {loadProducts} from '../data/products.js'
+import {loadProducts, loadProductsFetch} from '../data/products.js';
+import {loadCart} from '../data/cart.js';
 
+Promise.all([
+  loadProductsFetch(),
+  new Promise((resolve) => {
+    loadCart(() => {
+      resolve();
+    });
+  })
+]).then((values) => {
+  renderCheckoutHeader();
+  renderOrderSummary();
+  renderPaymentSummary();
+})
+
+/*
 //reccomended to use promises instead of callbacks
 new Promise((resolve) => {
   //start
@@ -16,6 +31,7 @@ new Promise((resolve) => {
   renderOrderSummary();
   renderPaymentSummary();
 });
+*/
 
 /*
 loadProducts(() => { //callback
@@ -63,7 +79,7 @@ new Promise((resolve) => {
 
 
 If we have multiple promises that can occur at the same time we can use:
-new Promise.all({
+Promise.all({
   new Promise((resolve) => {
     loadProducts(() => {
       resolve();  

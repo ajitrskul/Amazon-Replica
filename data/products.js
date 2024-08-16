@@ -55,8 +55,31 @@ Notes:
 
 export let products = [];
 
+export function loadProductsFetch() { //better way to make http requests
+  const promise = fetch(
+    'https://supersimplebackend.dev/products'
+  ).then((response) => { //uses a promise to wait for a response (response will just give response data not the object)
+    return response.json(); //gives json data attached to the response (asynchronous)
+  }).then((productsData) => { //productsData = response.json() (parses the json for us)
+    products = productsData.map((productDetails) => { 
+      if (productDetails.type === 'clothing') {
+        return new Clothing(productDetails);
+      }
+      return new Product(productDetails);
+    });    
+  });
+
+  return promise;
+}
+
+/*
+loadProductsFetch().then(() => { //attaches another step to the end of the promise
+
+})
+*/
+
 export function loadProducts(funct) {
-  const xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest(); //uses callback to wait for a response
 
   xhr.addEventListener('load', () => {
     products = JSON.parse(xhr.response);
